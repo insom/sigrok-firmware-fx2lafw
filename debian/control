@@ -1,0 +1,17 @@
+Source: sigrok-firmware-fx2lafw
+Section: electronics
+Priority: extra
+Maintainer: Uwe Hermann <uwe@debian.org>
+Build-Depends: debhelper (>= 9), autotools-dev, sdcc
+Standards-Version: 3.9.7
+Homepage: http://sigrok.org/wiki/Fx2lafw
+
+Package: sigrok-firmware-fx2lafw
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Firmware for Cypress FX2(LP) based logic analyzers
+ sigrok-firmware-fx2lafw is an open-source (GPLv2+) firmware, implemented
+ from scratch, that allows you to use almost any device or eval board
+ that has a Cypress FX2(LP) chip as a logic analyzer via libsigrok (and
+ a suitable frontend).
+

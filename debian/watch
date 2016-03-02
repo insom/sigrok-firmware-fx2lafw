@@ -1,0 +1,3 @@
+version=4
+http://sigrok.org/download/source/sigrok-firmware-fx2lafw \
+	sigrok-firmware-fx2lafw-([\d\.]+)\.tar\.gz debian uupdate

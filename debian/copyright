@@ -1,0 +1,69 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: sigrok-firmware-fx2lafw
+Upstream-Contact: <sigrok-devel@lists.sourceforge.net>
+Source: http://sigrok.org/wiki/Fx2lafw
+
+Files: *
+Copyright: 2011-2015 Uwe Hermann <uwe@hermann-uwe.de>
+License: GPL-2.0+
+
+Files: gpif-acquisition.c hw/cwav-usbeeax/dscr.a51 hw/cwav-usbeesx/dscr.a51 hw/cypress-fx2/dscr.a51 hw/saleae-logic/dscr.a51 include/dscr.inc
+Copyright: 2011-2012 Uwe Hermann <uwe@hermann-uwe.de>
+           2012 Joel Holdsworth <joel@airwebreathe.org.uk>
+License: GPL-2.0+
+
+Files: fx2lib/*
+Copyright: 2009-2010 Ubixum, Inc.
+License: LGPL-2.1+
+
+Files: hw/cwav-usbeedx/dscr.a51
+Copyright: 2012 Ivan Fedorov <oxyum@oxyum.ru>
+License: GPL-2.0+
+
+Files: include/command.h include/fx2lafw.h include/gpif-acquisition.h
+Copyright: 2012 Joel Holdsworth <joel@airwebreathe.org.uk>
+License: GPL-2.0+
+
+Files: Makefile.am
+Copyright: 2013 Uwe Hermann <uwe@hermann-uwe.de>
+           2015 Daniel Elstner <daniel.kitta@gmail.com>
+License: GPL-2.0+
+
+Files: debian/*
+Copyright: 2014-2016 Uwe Hermann <uwe@debian.org>
+License: GPL-2.0+
+
+License: GPL-2.0+
+ This package is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This package is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>
+ .
+ On Debian systems, the complete text of the GNU General
+ Public License version 2 can be found in "/usr/share/common-licenses/GPL-2".
+
+License: LGPL-2.1+
+ This package is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+ .
+ This package is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
+ .
+ On Debian systems, the complete text of the GNU Lesser General
+ Public License can be found in "/usr/share/common-licenses/LGPL-2".
+
