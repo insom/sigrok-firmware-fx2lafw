@@ -1,3 +1,10 @@
+sigrok-firmware-fx2lafw (0.1.4-1) unstable; urgency=medium
+
+  * New upstream version 0.1.4
+  * Standards-Version: 3.9.8 (no changes required).
+
+ -- Aaron Brady <aaron@insom.me.uk>  Sun, 19 Feb 2017 16:30:31 -0500
+
 sigrok-firmware-fx2lafw (0.1.3-1) unstable; urgency=medium
 
   * New upstream release.
