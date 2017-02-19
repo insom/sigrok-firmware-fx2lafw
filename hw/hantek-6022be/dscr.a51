@@ -1,7 +1,7 @@
 ;;
 ;; This file is part of the sigrok-firmware-fx2lafw project.
 ;;
-;; Copyright (C) 2015 Uwe Hermann <uwe@hermann-uwe.de>
+;; Copyright (C) 2016 Uwe Hermann <uwe@hermann-uwe.de>
 ;;
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -18,10 +18,11 @@
 ;; Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 ;;
 
-VID = 0x501D	; Manufacturer ID (0x1D50)
-PID = 0x8D60	; Product ID (0x608D)
+VID = 0x501d	; Manufacturer ID (0x1d50)
+PID = 0x8e60	; Product ID (0x608e)
+VER = 0x0100	; Product "version". 0x0001 == Hantek 6022BE.
 
-.include "dscr.inc"
-string_descriptor_a 3,^"sigrok FX2 16ch"
+.include "dscr_hantek_6022be.inc"
+string_descriptor_a 3,^"Hantek 6022BE"
 _dev_strings_end:
 	.dw	0x0000

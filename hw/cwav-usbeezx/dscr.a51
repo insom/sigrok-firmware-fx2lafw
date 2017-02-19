@@ -1,7 +1,7 @@
 ;;
 ;; This file is part of the sigrok-firmware-fx2lafw project.
 ;;
-;; Copyright (C) 2015 Uwe Hermann <uwe@hermann-uwe.de>
+;; Copyright (C) 2016 Uwe Hermann <uwe@hermann-uwe.de>
 ;;
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -18,10 +18,10 @@
 ;; Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 ;;
 
-VID = 0x501D	; Manufacturer ID (0x1D50)
-PID = 0x8D60	; Product ID (0x608D)
+VID = 0xa908	; Manufacturer ID (0x08a9)
+PID = 0x0500	; Product ID (0x0005)
 
 .include "dscr.inc"
-string_descriptor_a 3,^"sigrok FX2 16ch"
+string_descriptor_a 3,^"CWAV USBee ZX"
 _dev_strings_end:
 	.dw	0x0000

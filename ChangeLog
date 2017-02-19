@@ -1,3 +1,419 @@
+commit 2970556e910ee24673d909816c4cc6cf784fae4c
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Tue Oct 4 13:21:24 2016 +0200
+
+    configure.ac: Bump package version to 0.1.4.
+
+commit 1940f9fc5f94c31b9ac1172bdcbfdf775e8dd346
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Tue Oct 4 13:20:52 2016 +0200
+
+    NEWS: Add list of user-visible changes so far.
+
+commit b2893cc9f1b6a2fa4a53f32a85f29195b3ac4878
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Tue Oct 4 13:22:29 2016 +0200
+
+    Increase FX2LAFW_VERSION_MINOR to 2.
+    
+    There have been changes since the last release, but they have been
+    compatible ones that don't require any host-side (libsigrok) changes,
+    thus only increase FX2LAFW_VERSION_MINOR (but not FX2LAFW_VERSION_MAJOR).
+
+commit e59a70a92242d4c0d53ea0b065f61b43c2c43b03
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Sun Oct 30 12:12:31 2016 +0100
+
+    Use per-device USB serial number strings.
+    
+    These are not actual "serial numbers" in the strict sense, i.e. two
+    devices of the same type (e.g. two USBee ZX devices) would have the
+    same string.
+    
+    Using two different actual serial numbers in such a case is not possible
+    since both devices would get the exact same firmware file (uploaded to
+    RAM via USB) and thus the exact same hardcoded "serial number". All devices
+    where fx2lafw is currently used don't have an EEPROM where the firmware
+    (and thus a different serial number) could be stored persistently; it's
+    always re-uploaded to the device's RAM upon connecting the device to USB.
+    
+    However, the USB serial number field is still useful in that we can
+    store a nice device(-type) indicator string there. The benefit is that
+    an lsusb of an fx2lafw (after firmware upload) would yield something
+    specific like "USBee ZX" or "Hantek 6022BE" in addition to the very
+    generic "fx2lafw".
+
+commit 3878baac72b0db18a254b84f65a65a0f033e9be4
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Mon Oct 31 14:44:35 2016 +0100
+
+    Add "fx2lafw-" prefix to the 6022BE/DDS120 firmware files.
+
+commit b2fc269ae6d7586d8f8024354a490ecd55f77834
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Wed Oct 12 22:24:02 2016 +0200
+
+    Use the same VID/PID for Hantek 6022BE and SainSmart DDS120.
+    
+    (one of the official sigrok VID/PIDs, 1D50:608E)
+    
+    Encode the fact that they're different versions/revisions/variants
+    of the same device (more or less rebadges with only little changes)
+    in the USB product version field.
+
+commit 46e097cc30a9680362c4a0122e10dea79455ab01
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Wed Oct 12 22:16:13 2016 +0200
+
+    Makefile.am: Remove unneeded duplication.
+
+commit 01c919588b6ba25f926d97f899cfd2a5a082f453
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Sat Oct 8 16:41:10 2016 +0200
+
+    Add and use macros to simplify USB descriptor files.
+    
+    The macros in include/common.inc were provided by
+    Stefan Brüns <stefan.bruens@rwth-aachen.de>, thanks!
+
+commit 520598e2a91a2f68780744346ffb3998be50a9d4
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Sat Sep 3 15:33:51 2016 +0200
+
+    Makefile.am: Add dscr_hantek_6022be.inc to the tarball.
+
+commit 5fea0267f505f1ccc06c4516e246d875a4ae73bf
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Wed Aug 10 09:52:55 2016 +0200
+
+    HACKING: Prefer git pull requests over mailing list patches.
+    
+    Also, drop the reference to gitorious.org (no longer available).
+
+commit eccff92104ffb44e4344c87fc6743eec20b06694
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Wed Aug 10 09:44:45 2016 +0200
+
+    README: Drop obsolete and unneeded section.
+    
+    The firmware requirements should be documented in libsigrok itself, the
+    firmware in this repo doesn't know anything about its users per se.
+
+commit 6aa5d1f472dd35faed9085f6b2b24fa218314043
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Wed Aug 10 09:42:19 2016 +0200
+
+    gpif-acquisition.c: Minor cosmetics, drop obsolete comment.
+
+commit b93872aadb4d9aa576b9ce8d56dd2d0d8f953230
+Author: Paul Fertser <fercerpav@gmail.com>
+Date:   Fri Jul 15 23:19:10 2016 +0300
+
+    Refactor and bugfix the delay adding code for analog capture
+    
+    There're two essential modifications in this change:
+    
+    1. Fix timing for capture frequencies less than 200 kHz;
+    2. Sample ADC output after CLK is set low, as per the TLC5510
+    datasheet.
+    
+    The second point is also important as the capture state sets CLK low,
+    so with the previous code there might have been a very short glitch on
+    this line during capture. Not confirmed by measurements, but it's
+    cleaner this way.
+    
+    Signed-off-by: Paul Fertser <fercerpav@gmail.com>
+
+commit 1f99664cd09baa9bc584c884d7fd509d332d984e
+Author: Paul Fertser <fercerpav@gmail.com>
+Date:   Fri Jul 15 23:19:09 2016 +0300
+
+    Remove bogus part of OUTPUT used for analog sampling
+    
+    Since TRICTL = 0, FX2 always either pushes or pulls the CTLx pins.
+    
+    Signed-off-by: Paul Fertser <fercerpav@gmail.com>
+
+commit 10bb1488807fc35a95d2158b118b03bfc026ee4b
+Author: Paul Fertser <fercerpav@gmail.com>
+Date:   Fri Jul 15 23:19:08 2016 +0300
+
+    Fix typo in gpif_make_data_dp_state function name
+    
+    Signed-off-by: Paul Fertser <fercerpav@gmail.com>
+
+commit 41e02f6589989a2ef0c1d3c2be4317a662f393be
+Author: Paul Fertser <fercerpav@gmail.com>
+Date:   Fri Jul 15 23:19:07 2016 +0300
+
+    Change arguments of gpif_make_delay_state() to remove layering violation
+    
+    This function is called only for adding delay states to the waveform
+    so OPCODE is always the same.
+    
+    While at it, fix confusing comments.
+    
+    Signed-off-by: Paul Fertser <fercerpav@gmail.com>
+
+commit b68bc8eaca5454a158a0472afe45aac8c7f20717
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Wed Aug 10 09:38:14 2016 +0200
+
+    dscr*.inc: Document polling intervals better.
+
+commit 1cba57320f126176f6e45f3d0930e0fe9967a370
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Wed Aug 10 08:23:09 2016 +0200
+
+    dscr_hantek_6022be.inc: Fix incorrect comments, add additional ones.
+
+commit 3c9925a24936ed1cb225aa61e7d0971b7c9f680f
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Wed Aug 10 08:19:20 2016 +0200
+
+    dscr_hantek_6022be.inc: Change vendor string to "sigrok".
+
+commit e0c25b8e13abdba0de4dc57006dc195f4200b38a
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Wed Aug 10 08:07:32 2016 +0200
+
+    dscr_hantek_6022be.inc: Cosmetic and consistency changes.
+    
+    This makes the file a lot more readable and also easier to compare
+    to the other dscr.inc files.
+    
+    Also, fix some typos (or copy-paste errors) in some comments.
+
+commit ae087fd964d575a79f39ae086a035a3e4edf88bc
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Wed Aug 10 07:40:43 2016 +0200
+
+    dscr.inc: Shorten representation of two strings.
+
+commit bb9fd89f1c2668855475a441e1a5f2092a10fa3a
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Thu Aug 4 17:24:00 2016 +0200
+
+    hantek-6022be/sainsmart-dds120: Hook up correct per-device VID/PID.
+
+commit 4349f28686db6fe1f0c8863246f653277afb8b01
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Thu Aug 4 17:18:14 2016 +0200
+
+    Deduplicate hantek-6022be/sainsmart-dds120's dscr.inc.
+
+commit e16027445b508591ec8830fd74d0542e52a1c1d3
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Thu Aug 4 17:16:48 2016 +0200
+
+    hantek-6022be/sainsmart-dds120: Use the same USB product string.
+
+commit 823ff1e02ab3d100c1ef0d0fe3bbcc6b05aba446
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Wed Jul 13 00:10:21 2016 +0200
+
+    README: Mention the Sainsmart DDS120 firmware.
+
+commit 66255d9cae682fe637319bd59678ddf03595e466
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Tue Jul 12 23:48:13 2016 +0200
+
+    Add CWAV USBee ZX firmware support.
+    
+    This fixes bug #764.
+
+commit 386296a75ef7c2b3fbbd668de838a16bc13ee461
+Author: Benjamin Larsson <benjamin@southpole.se>
+Date:   Thu May 19 00:36:25 2016 +0200
+
+    Silence warnings
+    
+    The following warnings are fixed by this:
+    
+     hantek_6022be.c:424: warning 158: overflow in implicit constant conversion
+     sainsmart_dds120.c:359: warning 158: overflow in implicit constant conversion
+     sainsmart_dds120.c:363: warning 158: overflow in implicit constant conversion
+     sainsmart_dds120.c:366: warning 158: overflow in implicit constant conversion
+     sainsmart_dds120.c:370: warning 158: overflow in implicit constant conversion
+     sainsmart_dds120.c:494: warning 158: overflow in implicit constant conversion
+
+commit 24373950c5858ea7761ac8aa77b51c717558316b
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Thu May 19 00:17:16 2016 +0200
+
+    Add a few more code comments.
+
+commit 552a42e560835b12a1f8a51eec750792a196c6e5
+Author: Benjamin Larsson <benjamin@southpole.se>
+Date:   Wed May 18 22:50:06 2016 +0200
+
+    fx2lafw: clock CTL1 the same as CTL2
+    
+    The LHT00SU1 has it's clock pins swapped compared to other hardware.
+    By duplicating the CTL2 pin both the socket and the adc will
+    have the same clock frequency.
+
+commit 5b8b366d255733ca647f96c19a4c77a00583508e
+Author: Markus Siegert <markus@drsiegert.de>
+Date:   Sun Apr 10 22:03:13 2016 +0200
+
+    Use 1D50:608E for open source Sainsmart DDS120 firmware
+
+commit a425fae9a25f54af8d514aff8824382f7b317ba4
+Author: Benjamin Larsson <benjamin@southpole.se>
+Date:   Sat Apr 23 18:22:19 2016 +0200
+
+    Support changing calibration pulse frequency
+
+commit 33c275bbd292b21149cb76094e280b6ea2f62cae
+Author: Benjamin Larsson <benjamin@southpole.se>
+Date:   Sat Apr 23 18:19:12 2016 +0200
+
+    Add more sample rates
+
+commit 75ad0fa51ea581cbea1f1c0fb173856822c6e971
+Author: Benjamin Larsson <benjamin@southpole.se>
+Date:   Sun Apr 3 17:39:07 2016 +0200
+
+    Add support for setting Sainsmart AC/DC coupling
+
+commit ce1d0a869e4761d30b698b6bb1ea015a0470f09e
+Author: Benjamin Larsson <benjamin@southpole.se>
+Date:   Fri Mar 18 22:12:56 2016 +0100
+
+    Initial Sainsmart DDS120 firmware
+
+commit 8f87f8779a3977bd3cb8ec5003f43acdc44dbba6
+Author: Benjamin Larsson <benjamin@southpole.se>
+Date:   Thu Apr 28 00:58:26 2016 +0200
+
+    Add CMD_START_FLAGS_CLK_CTL2 command flag
+    
+    This command will generate a suitable clock on pin CTL2 for
+    devices with an analog input.
+
+commit c7d1f48c01801ba990fe6f9e881c688e5c90d24e
+Author: Benjamin Larsson <benjamin@southpole.se>
+Date:   Thu Apr 28 00:49:10 2016 +0200
+
+    Enable more control over the GPIF state machine
+
+commit a77606e9b63d2333f1253b8e0cb8071aed6d8609
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Thu Mar 10 23:31:18 2016 +0100
+
+    hw/hantek-6022be/dscr.a51: License header cosmetics.
+
+commit 38e32023c4b2dc92d51d969e1958bd1ee941804f
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Thu Mar 10 23:24:16 2016 +0100
+
+    hantek_6022be.c: Simplify handle_vendorcommand().
+
+commit 374453b93a012f483dc9da29ac4713b561e1aacb
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Thu Mar 10 23:19:48 2016 +0100
+
+    hantek_6022be.c: Minor cosmetics.
+
+commit 0ab4ea5da80c9f3d3e523dcaa259f5e97dcda0b8
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Thu Mar 10 23:15:05 2016 +0100
+
+    hantek_6022be.c: Make a few variables and functions static.
+
+commit fb4075d535596e9721f89d1cd98ab5ebe4540a2f
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Thu Mar 10 23:12:24 2016 +0100
+
+    hantek_6022be.c: Move main() for consistency.
+
+commit cc789c14085a371976fa7ef1bc281eb7bac34086
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Thu Mar 10 23:10:06 2016 +0100
+
+    hantek_6022be.c: Adapt to fx2lafw coding style, minor simplifications.
+
+commit 484b3aa0cf59216dee289c187fc6a232fdcf8ded
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Thu Mar 10 22:43:41 2016 +0100
+
+    hantek_6022be.c: Drop unneeded debug code, random cruft.
+
+commit 52ec81d349f5917587e98519b04ff109cf5cf32e
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Thu Mar 10 22:38:52 2016 +0100
+
+    README: Update to mention the Hantek 6022BE firmware.
+
+commit 1974eccb66634e2d7535a892d1c703665f757408
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Thu Mar 10 22:19:14 2016 +0100
+
+    hantek_6022be.c: Fix build error.
+    
+    Drop handle_get_descriptor(), since it's already provided by
+    fx2lib/lib/setupdat.c, in order to fix the following linker error:
+    
+      Multiple definition of _handle_get_descriptor
+      Makefile:925: recipe for target 'hw/hantek-6022be/hantek-6022be.ihx' failed
+
+commit 6139dad4829bf7d412f4ad847cf1d02aecb20bbe
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Thu Mar 10 21:46:29 2016 +0100
+
+    Makefile.am: Hook up building of hantek-6022be.fw.
+    
+    The FX2 firmware for the Hantek 6022BE USB-based oscilloscope uses most
+    of the existing fx2lafw build infrastructure and our existing fx2lib setup,
+    but requires slightly different sdcc linker settings due to different code
+    and XRAM sizes and locations, etc.
+
+commit 189db3d41e4c3d8a4aec5ec605c03df75577d531
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Thu Mar 10 21:02:12 2016 +0100
+
+    Add FX2 firmware for the Hantek 6022BE USB scope.
+    
+    This firmware was originally created by Jochen Hoenicke in 05/2015
+    for the Hantek6022API github project by Robert Cope. Full credit for
+    the implementation of the firmware goes to Jochen Hoenicke, thanks!
+    
+    Github project:
+    
+      https://github.com/rpcope1/Hantek6022API
+    
+    We're incorporating the firmware into the sigrok-firmware-fx2lafw
+    repo/tarball for convenience of sigrok users. E.g. so that they can
+    easily get it with the other fx2lafw firmware files from distro
+    packages, the build scripts in sigrok-util automatically build/install
+    it, the sigrok Windows installers automatically ship it, the sigrok
+    Android APKs automatically ship it, etc. etc.
+    
+    The files we're integrating into fx2lafw from Hantek6022API are taken from
+    the PyHT6022/HantekFirmware/custom directory of that repo, using the state
+    as of 03/2016 (the files were last modified in 05/2015, though).
+    
+    The git hash of the last relevant commit there was:
+    
+      0498e2ab239aabb1084c19e1e24faf56764b217e
+    
+    Files integrated into fx2lafw:
+    
+     - hw/hantek-6022be/dscr.a51: Copied unmodified.
+    
+     - hantek_6022be.c: This file is created by appending the
+       contents of the original device.c and fw.c together without
+       other modifications.
+    
+    The license of both files is LGPL 2.1 (or later).
+
+commit 05f4369545dad41969b112893a8bb4146e98fc0a
+Author: Uwe Hermann <uwe@hermann-uwe.de>
+Date:   Thu Mar 10 21:01:29 2016 +0100
+
+    README: Update prebuilt firmware download location.
+
 commit a6fb49c00691a917a1734afbf3071ca2ad0c1c46
 Author: Uwe Hermann <uwe@hermann-uwe.de>
 Date:   Thu Nov 26 23:41:51 2015 +0100

@@ -46,10 +46,7 @@ static void gpif_setup_registers(void)
 	/* TODO. Value probably irrelevant, as we don't use RDY* signals? */
 	GPIFREADYCFG = 0;
 
-	/*
-	 * Set TRICTL = 0, thus CTL0-CTL5 are CMOS outputs.
-	 * TODO: Probably irrelevant, as we don't use CTL0-CTL5?
-	 */
+	/* Set TRICTL = 0, thus CTL0-CTL5 are CMOS outputs. */
 	GPIFCTLCFG = 0;
 
 	/* When GPIF is idle, tri-state the data bus. */
@@ -132,7 +129,7 @@ void gpif_init_la(void)
 	gpif_acquiring = FALSE;
 }
 
-static void gpif_make_delay_state(volatile BYTE *pSTATE, uint8_t delay)
+static void gpif_make_delay_state(volatile BYTE *pSTATE, uint8_t delay, uint8_t output)
 {
 	/*
 	 * DELAY
@@ -143,15 +140,14 @@ static void gpif_make_delay_state(volatile BYTE *pSTATE, uint8_t delay)
 	/*
 	 * OPCODE
 	 * SGL=0, GIN=0, INCAD=0, NEXT=0, DATA=0, DP=0
-	 * Collect data in this state.
 	 */
-	pSTATE[8] = 0x00;
+	pSTATE[8] = 0;
 
 	/*
 	 * OUTPUT
-	 * OE[0:3]=0, CTL[0:3]=0
+	 * CTL[0:5]=output
 	 */
-	pSTATE[16] = 0x00;
+	pSTATE[16] = output;
 
 	/*
 	 * LOGIC FUNCTION
@@ -160,7 +156,7 @@ static void gpif_make_delay_state(volatile BYTE *pSTATE, uint8_t delay)
 	pSTATE[24] = 0x00;
 }
 
-static void gpid_make_data_dp_state(volatile BYTE *pSTATE)
+static void gpif_make_data_dp_state(volatile BYTE *pSTATE)
 {
 	/*
 	 * BRANCH
@@ -176,7 +172,7 @@ static void gpid_make_data_dp_state(volatile BYTE *pSTATE)
 
 	/*
 	 * OUTPUT
-	 * OE[0:3]=0, CTL[0:3]=0
+	 * CTL[0:5]=0
 	 */
 	pSTATE[16] = 0x00;
 
@@ -197,11 +193,10 @@ bool gpif_acquisition_start(const struct cmd_start_acquisition *cmd)
 	while (!(GPIFTRIG & 0x80));
 
 	/* Configure the EP2 FIFO. */
-	if (cmd->flags & CMD_START_FLAGS_SAMPLE_16BIT) {
+	if (cmd->flags & CMD_START_FLAGS_SAMPLE_16BIT)
 		EP2FIFOCFG = bmAUTOIN | bmWORDWIDE;
-	} else {
+	else
 		EP2FIFOCFG = bmAUTOIN;
-	}
 	SYNCDELAY();
 
 	/* Set IFCONFIG to the correct clock source. */
@@ -218,14 +213,31 @@ bool gpif_acquisition_start(const struct cmd_start_acquisition *cmd)
 	    cmd->sample_delay_h >= 6)
 		return false;
 
-	for (i = 0; i < cmd->sample_delay_h; i++)
-		gpif_make_delay_state(pSTATE++, 0);
+	if (cmd->flags & CMD_START_FLAGS_CLK_CTL2) {
+		uint8_t delay_1, delay_2 = cmd->sample_delay_l;
 
-	if (cmd->sample_delay_l != 0)
-		gpif_make_delay_state(pSTATE++, cmd->sample_delay_l);
+		/* We need a pulse where the CTL1/2 pins alternate states. */
+		if (cmd->sample_delay_h) {
+			for (i = 0; i < cmd->sample_delay_h; i++)
+				gpif_make_delay_state(pSTATE++, 0, 0x06);
+		} else {
+			delay_1 = delay_2 / 2;
+			delay_2 -= delay_1;
+			gpif_make_delay_state(pSTATE++, delay_1, 0x06);
+		}
+
+		/* sample_delay_l is always != 0 for the supported rates. */
+		gpif_make_delay_state(pSTATE++, delay_2, 0x00);
+	} else {
+		for (i = 0; i < cmd->sample_delay_h; i++)
+			gpif_make_delay_state(pSTATE++, 0, 0x00);
+
+		if (cmd->sample_delay_l != 0)
+			gpif_make_delay_state(pSTATE++, cmd->sample_delay_l, 0x00);
+	}
 
 	/* Populate S1 - the decision point. */
-	gpid_make_data_dp_state(pSTATE++);
+	gpif_make_data_dp_state(pSTATE++);
 
 	/* Execute the whole GPIF waveform once. */
 	gpif_set_tc16(1);
